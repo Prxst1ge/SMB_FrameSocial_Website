@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact | Frame Social</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- VARIABLES --- */
+        :root {
+            --black: #0d0d0d;
+            --white: #ffffff;
+            --border-width: 15px;
+        }
+
+        /* --- RESET --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+
+        body {
+            background-color: var(--white);
+            color: var(--black);
+            font-family: 'Raleway', sans-serif;
+            border: var(--border-width) solid var(--black);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- CUSTOM CURSOR --- */
+        .cursor {
+            position: fixed; top: 0; left: 0; width: 20px; height: 20px;
+            background: var(--black); border-radius: 50%; pointer-events: none;
+            z-index: 9999; transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s, background 0.3s;
+            mix-blend-mode: difference;
+        }
+        .cursor.hovered {
+            width: 50px; height: 50px; background: var(--white); border: 1px solid var(--black);
+        }
+
+        /* --- NAVIGATION --- */
+        nav {
+            position: fixed; top: var(--border-width); left: var(--border-width); right: var(--border-width);
+            padding: 30px 50px; display: flex; justify-content: space-between; align-items: center;
+            background: rgba(255, 255, 255, 0); z-index: 100;
+            mix-blend-mode: difference; color: white;
+        }
+
+        .logo-img {
+            height: 120px; width: auto; display: block;
+            /* Invert black logo to white for difference mode */
+            filter: invert(1);
+        }
+
+        .nav-links { display: flex; gap: 40px; }
+        .nav-links a {
+            font-size: 0.85rem; text-transform: uppercase; letter-spacing: 2px;
+            font-weight: 600; text-decoration: none; color: inherit; position: relative;
+        }
+        .nav-links a.active::after {
+            content: ''; position: absolute; bottom: -5px; left: 0; width: 100%; height: 1px; background: white;
+        }
+
+        /* --- HAMBURGER MENU (Hidden on Desktop) --- */
+        .hamburger { display: none; cursor: none; flex-direction: column; gap: 6px; width: 30px; z-index: 101; }
+        .hamburger span { display: block; width: 100%; height: 2px; background-color: white; transition: 0.3s; }
+        
+        /* Mobile Menu Overlay */
+        .mobile-menu {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+            background: var(--black); z-index: 90;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            gap: 30px; transform: translateY(-100%);
+            transition: 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+        .mobile-menu.active { transform: translateY(0); }
+
+        /* Mobile Menu Links - Using Cormorant Garamond */
+        .mobile-link {
+            font-family: 'Cormorant Garamond', serif; /* CORRECT FONT */
+            font-size: 3rem; text-transform: uppercase; text-decoration: none;
+            color: var(--white); transition: 0.3s;
+        }
+        .mobile-link:hover { font-style: italic; opacity: 0.8; }
+
+        /* Animation States */
+        .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+        .hamburger.active span:nth-child(2) { transform: rotate(-45deg) translate(1px, -1px); }
+
+        /* --- CONTACT PAGE LAYOUT --- */
+        .contact-container {
+            display: grid; grid-template-columns: 1fr 1fr;
+            min-height: 100vh; padding-top: 100px;
+        }
+
+        .info-side {
+            padding: 80px; display: flex; flex-direction: column; justify-content: center;
+            border-right: 1px solid var(--black);
+        }
+        .info-side h1 {
+            font-family: 'Cormorant Garamond', serif; font-size: 5rem;
+            line-height: 0.9; margin-bottom: 40px;
+        }
+        .email-display {
+            font-size: 1.5rem; text-decoration: underline; margin-bottom: 60px; cursor: none;
+        }
+        .social-list {
+            display: flex; gap: 30px; font-size: 0.9rem;
+            text-transform: uppercase; letter-spacing: 2px;
+        }
+
+        .form-side {
+            padding: 80px; display: flex; flex-direction: column; justify-content: center;
+        }
+        .form-group { margin-bottom: 40px; }
+        .form-label {
+            display: block; font-size: 0.8rem; text-transform: uppercase;
+            letter-spacing: 2px; margin-bottom: 10px; color: #666;
+        }
+        .form-input {
+            width: 100%; border: none; border-bottom: 1px solid var(--black);
+            padding: 10px 0; font-family: 'Cormorant Garamond', serif; font-size: 1.5rem;
+            background: transparent; outline: none; transition: 0.3s; cursor: none;
+        }
+        .form-input:focus { border-bottom: 2px solid var(--black); }
+
+        .budget-options { display: flex; gap: 15px; flex-wrap: wrap; }
+        .budget-option {
+            padding: 10px 20px; border: 1px solid #ccc; border-radius: 50px;
+            cursor: none; font-size: 0.85rem; transition: 0.3s;
+        }
+        .budget-option:hover, .budget-option.selected {
+            background: var(--black); color: var(--white); border-color: var(--black);
+        }
+
+        .btn-submit {
+            padding: 20px 50px; background: var(--black); color: var(--white);
+            border: none; text-transform: uppercase; letter-spacing: 2px;
+            font-size: 1rem; cursor: none; transition: 0.3s; align-self: flex-start;
+        }
+        .btn-submit:hover { background: #333; }
+
+        .success-overlay {
+            display: none; flex-direction: column; align-items: center;
+            justify-content: center; text-align: center; height: 100%;
+        }
+        .success-overlay h2 { font-family: 'Cormorant Garamond', serif; font-size: 3rem; }
+
+        /* --- FOOTER --- */
+        footer {
+            padding: 80px 20px; background: var(--white); text-align: center;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .footer-socials { display: flex; gap: 30px; margin-bottom: 20px; }
+        .footer-socials a {
+            font-family: 'Cormorant Garamond', serif; font-size: 1.2rem;
+            text-transform: uppercase; letter-spacing: 1px; color: var(--black);
+        }
+        .footer-bottom-text {
+            font-family: 'Raleway', sans-serif; font-size: 0.75rem;
+            text-transform: uppercase; letter-spacing: 2px; opacity: 0.5;
+        }
+
+        /* --- MOBILE MEDIA QUERY --- */
+        @media (max-width: 768px) {
+            * { cursor: auto !important; }
+            .cursor { display: none; }
+            :root { --border-width: 0; }
+
+            /* Nav adjustments */
+            nav {
+                position: absolute; width: 100%; top: 0; left: 0; padding: 20px;
+                background: transparent; border: none;
+                mix-blend-mode: normal; 
+                justify-content: flex-end; /* Push hamburger right */
+            }
+            .logo-img { display: none; } /* Hide Logo */
+            .nav-links { display: none; } /* Hide Desktop Links */
+            
+            /* Show Hamburger */
+            .hamburger { display: flex; }
+            .hamburger span { background-color: var(--black); } 
+            .hamburger.active span { background-color: var(--white); }
+
+            /* Layout */
+            .contact-container { grid-template-columns: 1fr; padding-top: 60px; }
+            .info-side { border-right: none; padding: 40px 20px; text-align: center; }
+            .info-side h1 { font-size: 3.5rem; }
+            .social-list { justify-content: center; }
+            .form-side { padding: 0 20px 60px; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="cursor"></div>
+
+    <nav>
+        <a href="index.html">
+            <img src="Images/Logo2.png" alt="Frame Social" class="logo-img">
+        </a>
+        <div class="nav-links">
+            <a href="index.html">Studio</a>
+            <a href="work.html">Work</a>
+            <a href="services.html">Services</a>
+            <a href="contact.html" class="active">Contact</a>
+        </div>
+        <div class="hamburger" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <div class="mobile-menu">
+        <a href="index.html" class="mobile-link">Studio</a>
+        <a href="work.html" class="mobile-link">Work</a>
+        <a href="services.html" class="mobile-link">Services</a>
+        <a href="contact.html" class="mobile-link">Contact</a>
+    </div>
+
+    <div class="contact-container">
+        <div class="info-side">
+            <h1>Let's Start<br>A Project.</h1>
+            <a href="mailto:hello@framesocial.com" class="email-display">hello@framesocial.com</a>
+            <div class="social-list">
+                <span>Instagram</span>
+                <span>LinkedIn</span>
+            </div>
+        </div>
+
+        <div class="form-side">
+            <form id="inquiry-form">
+                <div class="form-group">
+                    <label class="form-label">What's your name?</label>
+                    <input type="text" class="form-input" placeholder="John Doe" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Company / Brand</label>
+                    <input type="text" class="form-input" placeholder="Brand Name" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Budget Range</label>
+                    <div class="budget-options">
+                        <div class="budget-option" onclick="selectBudget(this)">$2k - $5k</div>
+                        <div class="budget-option" onclick="selectBudget(this)">$5k - $10k</div>
+                        <div class="budget-option" onclick="selectBudget(this)">$10k+</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Tell us about it</label>
+                    <textarea class="form-input" rows="1" placeholder="Project details..."></textarea>
+                </div>
+                <button type="submit" class="btn-submit">Send Inquiry</button>
+            </form>
+
+            <div id="success-msg" class="success-overlay">
+                <h2>Message Sent.</h2>
+                <p>We'll frame a response shortly.</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-socials">
+            <a href="#">Instagram</a>
+            <a href="#">LinkedIn</a>
+        </div>
+        <p class="footer-bottom-text">© 2026 Frame Social. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const cursor = document.querySelector('.cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        const hoverTargets = document.querySelectorAll('a, button, input, textarea, .budget-option');
+        hoverTargets.forEach(target => {
+            target.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+            target.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+        });
+
+        function selectBudget(element) {
+            document.querySelectorAll('.budget-option').forEach(el => el.classList.remove('selected'));
+            element.classList.add('selected');
+        }
+
+        document.getElementById('inquiry-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            this.style.display = 'none';
+            document.getElementById('success-msg').style.display = 'flex';
+        });
+
+        function toggleMenu() {
+            document.querySelector('.mobile-menu').classList.toggle('active');
+            document.querySelector('.hamburger').classList.toggle('active');
+        }
+    </script>
+
+</body>
+</html>

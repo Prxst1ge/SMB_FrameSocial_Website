@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Services | Frame Social</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Raleway:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* --- VARIABLES --- */
+        :root {
+            --black: #0d0d0d;
+            --white: #ffffff;
+            --border-width: 15px;
+        }
+
+        /* HIDE DEFAULT CURSOR */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none;
+        }
+
+        body {
+            background-color: var(--white);
+            color: var(--black);
+            font-family: 'Raleway', sans-serif;
+            border: var(--border-width) solid var(--black);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- CUSTOM CURSOR CSS --- */
+        .cursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 20px;
+            height: 20px;
+            background: var(--black);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s, background 0.3s;
+            mix-blend-mode: difference;
+        }
+
+        .cursor.hovered {
+            width: 50px;
+            height: 50px;
+            background: var(--white);
+            border: 1px solid var(--black);
+        }
+
+        /* --- NAVIGATION --- */
+        nav {
+            position: fixed;
+            top: var(--border-width);
+            left: var(--border-width);
+            right: var(--border-width);
+            padding: 30px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0);
+            z-index: 100;
+            mix-blend-mode: difference;
+            color: white;
+        }
+
+        .logo-img {
+            height: 120px;
+            width: auto;
+            display: block;
+            filter: invert(1);
+            /* Invert black logo to white for difference mode */
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+        }
+
+        .nav-links a {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+            text-decoration: none;
+            color: inherit;
+            position: relative;
+        }
+
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: white;
+        }
+
+        /* --- HAMBURGER MENU --- */
+        .hamburger {
+            display: none;
+            cursor: none;
+            flex-direction: column;
+            gap: 6px;
+            width: 30px;
+            z-index: 101;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 100%;
+            height: 2px;
+            background-color: white;
+            transition: 0.3s;
+        }
+
+        /* Mobile Menu Overlay */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: var(--black);
+            z-index: 90;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            transform: translateY(-100%);
+            transition: 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        .mobile-menu.active {
+            transform: translateY(0);
+        }
+
+        /* Mobile Menu Links */
+        .mobile-link {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3rem;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: var(--white);
+            transition: 0.3s;
+        }
+
+        .mobile-link:hover {
+            font-style: italic;
+            opacity: 0.8;
+        }
+
+        /* Animation States */
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            transform: rotate(-45deg) translate(1px, -1px);
+        }
+
+        /* --- HEADER --- */
+        .page-header {
+            padding: 150px 10% 80px;
+        }
+
+        .page-header h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 5rem;
+            text-transform: uppercase;
+            line-height: 0.9;
+        }
+
+        /* --- SERVICE LIST --- */
+        .service-list {
+            padding: 0 10%;
+        }
+
+        .service-block {
+            border-top: 1px solid var(--black);
+            padding: 60px 0;
+            display: grid;
+            grid-template-columns: 0.5fr 1.5fr 1fr;
+            align-items: flex-start;
+            transition: 0.3s;
+        }
+
+        .service-block:hover {
+            background: #f9f9f9;
+            padding-left: 20px;
+        }
+
+        .svc-num {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            color: #888;
+        }
+
+        .svc-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3rem;
+            text-transform: uppercase;
+        }
+
+        .svc-tags {
+            margin-top: 10px;
+        }
+
+        .svc-tags li {
+            list-style: none;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            border-left: 1px solid var(--black);
+            padding-left: 10px;
+        }
+
+        /* --- PROCESS SECTION --- */
+        .process-section {
+            background: var(--black);
+            color: var(--white);
+            padding: 100px 10%;
+            margin-top: 100px;
+        }
+
+        .process-header {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3rem;
+            margin-bottom: 60px;
+            text-transform: uppercase;
+            font-style: italic;
+        }
+
+        .process-steps {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .step h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        .step p {
+            font-size: 0.85rem;
+            color: #aaa;
+            line-height: 1.6;
+        }
+
+        .step-line {
+            width: 100%;
+            height: 1px;
+            background: #444;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .step-line::after {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: 0;
+            width: 7px;
+            height: 7px;
+            background: var(--white);
+            border-radius: 50%;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            padding: 80px 20px;
+            background: var(--white);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .footer-socials {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+
+        .footer-socials a {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--black);
+            text-decoration: none;
+        }
+
+        .footer-bottom-text {
+            font-family: 'Raleway', sans-serif;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0.5;
+        }
+
+        /* --- MOBILE MEDIA QUERY --- */
+        @media (max-width: 768px) {
+            * {
+                cursor: auto !important;
+            }
+
+            .cursor {
+                display: none;
+            }
+
+            :root {
+                --border-width: 0;
+            }
+
+            /* Nav adjustments */
+            nav {
+                position: absolute;
+                width: 100%;
+                top: 0;
+                left: 0;
+                padding: 20px;
+                background: transparent;
+                border: none;
+                mix-blend-mode: normal;
+                justify-content: flex-end;
+                /* Push hamburger right */
+            }
+
+            .logo-img {
+                display: none;
+            }
+
+            /* Hide Logo */
+            .nav-links {
+                display: none;
+            }
+
+            /* Hide Desktop Links */
+
+            /* Show Hamburger */
+            .hamburger {
+                display: flex;
+            }
+
+            .hamburger span {
+                background-color: var(--black);
+            }
+
+            .hamburger.active span {
+                background-color: var(--white);
+            }
+
+            /* Layout Stacking */
+            .service-block {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .process-steps {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            nav {
+                position: absolute;
+            }
+
+            /* Override relative/border-bottom */
+
+            /* Inside @media (max-width: 768px) of services.html */
+            .page-header h1 {
+                font-size: 10vw;
+                /* This ensures the long word fits on screen */
+                word-wrap: break-word;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="cursor"></div>
+
+    <nav>
+        <a href="index.html">
+            <img src="Images/Logo2.png" alt="Frame Social" class="logo-img">
+        </a>
+        <div class="nav-links">
+            <a href="index.html">Studio</a>
+            <a href="work.html">Work</a>
+            <a href="services.html" class="active">Services</a>
+            <a href="contact.html">Contact</a>
+        </div>
+        <div class="hamburger" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <div class="mobile-menu">
+        <a href="index.html" class="mobile-link">Studio</a>
+        <a href="work.html" class="mobile-link">Work</a>
+        <a href="services.html" class="mobile-link">Services</a>
+        <a href="contact.html" class="mobile-link">Contact</a>
+    </div>
+
+    <header class="page-header">
+        <h1>Capabilities</h1>
+    </header>
+
+    <section class="service-list">
+        <div class="service-block">
+            <div class="svc-num">(01)</div>
+            <div class="svc-title">Branding</div>
+            <ul class="svc-tags">
+                <li>Brand Identity</li>
+                <li>Logo Design</li>
+                <li>Brand Guidelines</li>
+                <li>Art Direction</li>
+            </ul>
+        </div>
+        <div class="service-block">
+            <div class="svc-num">(02)</div>
+            <div class="svc-title">Social</div>
+            <ul class="svc-tags">
+                <li>Instagram Strategy</li>
+                <li>TikTok Growth</li>
+                <li>Community Management</li>
+                <li>Influencer Seeding</li>
+            </ul>
+        </div>
+        <div class="service-block">
+            <div class="svc-num">(03)</div>
+            <div class="svc-title">Content</div>
+            <ul class="svc-tags">
+                <li>Photography</li>
+                <li>Videography</li>
+                <li>Copywriting</li>
+                <li>Motion Graphics</li>
+            </ul>
+        </div>
+        <div class="service-block">
+            <div class="svc-num">(04)</div>
+            <div class="svc-title">Web</div>
+            <ul class="svc-tags">
+                <li>UI/UX Design</li>
+                <li>Web Development</li>
+                <li>SEO Optimization</li>
+                <li>Landing Pages</li>
+            </ul>
+        </div>
+    </section>
+
+    <section class="process-section">
+        <h2 class="process-header">The Frame Method</h2>
+        <div class="process-steps">
+            <div class="step">
+                <div class="step-line"></div>
+                <h3>01. Discover</h3>
+                <p>We audit your brand, analyze your audience, and find the gap in the market.</p>
+            </div>
+            <div class="step">
+                <div class="step-line"></div>
+                <h3>02. Define</h3>
+                <p>We build the strategy, the visual direction, and the voice of the brand.</p>
+            </div>
+            <div class="step">
+                <div class="step-line"></div>
+                <h3>03. Design</h3>
+                <p>We create the assets, shoot the content, and build the digital experience.</p>
+            </div>
+            <div class="step">
+                <div class="step-line"></div>
+                <h3>04. Deploy</h3>
+                <p>We launch the campaign, manage the community, and analyze results.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-socials">
+            <a href="#">Instagram</a>
+            <a href="#">LinkedIn</a>
+        </div>
+        <p class="footer-bottom-text">© 2026 Frame Social. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const cursor = document.querySelector('.cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        // Add hover effect to links AND service blocks
+        const hoverTargets = document.querySelectorAll('a, .service-block');
+        hoverTargets.forEach(target => {
+            target.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+            target.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+        });
+
+        function toggleMenu() {
+            document.querySelector('.mobile-menu').classList.toggle('active');
+            document.querySelector('.hamburger').classList.toggle('active');
+        }
+    </script>
+
+</body>
+
+</html>

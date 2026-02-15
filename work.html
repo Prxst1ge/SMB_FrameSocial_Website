@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Work | Frame Social</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Raleway:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* --- VARIABLES --- */
+        :root {
+            --black: #0d0d0d;
+            --white: #ffffff;
+            --border-width: 15px;
+        }
+
+        /* HIDE DEFAULT CURSOR */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none;
+        }
+
+        body {
+            background-color: var(--white);
+            color: var(--black);
+            font-family: 'Raleway', sans-serif;
+            border: var(--border-width) solid var(--black);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- CUSTOM CURSOR CSS --- */
+        .cursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 20px;
+            height: 20px;
+            background: var(--black);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s, background 0.3s;
+            mix-blend-mode: difference;
+        }
+
+        .cursor.hovered {
+            width: 50px;
+            height: 50px;
+            background: var(--white);
+            border: 1px solid var(--black);
+        }
+
+        /* --- NAVIGATION --- */
+        nav {
+            position: fixed;
+            top: var(--border-width);
+            left: var(--border-width);
+            right: var(--border-width);
+            padding: 30px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0);
+            z-index: 100;
+            mix-blend-mode: difference;
+            color: white;
+        }
+
+        .logo-img {
+            height: 120px;
+            width: auto;
+            display: block;
+            filter: invert(1);
+            /* Invert black logo to white for difference mode */
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+        }
+
+        .nav-links a {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+            text-decoration: none;
+            color: inherit;
+            position: relative;
+        }
+
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: white;
+        }
+
+        /* --- HAMBURGER MENU --- */
+        .hamburger {
+            display: none;
+            cursor: none;
+            flex-direction: column;
+            gap: 6px;
+            width: 30px;
+            z-index: 101;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 100%;
+            height: 2px;
+            background-color: white;
+            transition: 0.3s;
+        }
+
+        /* Mobile Menu Overlay */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: var(--black);
+            z-index: 90;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            transform: translateY(-100%);
+            transition: 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        .mobile-menu.active {
+            transform: translateY(0);
+        }
+
+        /* Mobile Menu Links */
+        .mobile-link {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3rem;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: var(--white);
+            transition: 0.3s;
+        }
+
+        .mobile-link:hover {
+            font-style: italic;
+            opacity: 0.8;
+        }
+
+        /* Animation States */
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            transform: rotate(-45deg) translate(1px, -1px);
+        }
+
+        /* --- PAGE HEADER --- */
+        .page-header {
+            padding: 150px 10% 50px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .page-header h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 4rem;
+            text-transform: uppercase;
+        }
+
+        .page-header p {
+            max-width: 400px;
+            margin-top: 10px;
+            color: #666;
+        }
+
+        /* --- WORK GRID --- */
+        .work-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .project-card {
+            position: relative;
+            height: 500px;
+            overflow: hidden;
+            border-bottom: 1px solid var(--black);
+            border-right: 1px solid var(--black);
+            display: block;
+            /* Make anchor tag block */
+        }
+
+        .project-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* REMOVED: filter: grayscale(100%); */
+            transition: 0.5s ease;
+        }
+
+        .project-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: 0.5s ease;
+            color: white;
+            text-align: center;
+        }
+
+        .project-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3rem;
+        }
+
+        .project-cat {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 10px;
+        }
+
+        .project-card:hover .project-img {
+            /* REMOVED: filter: grayscale(0%); */
+            transform: scale(1.05);
+        }
+
+        .project-card:hover .project-overlay {
+            opacity: 1;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            padding: 80px 20px;
+            background: var(--white);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .footer-socials {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+
+        .footer-socials a {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--black);
+            text-decoration: none;
+        }
+
+        .footer-bottom-text {
+            font-family: 'Raleway', sans-serif;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0.5;
+        }
+
+        /* --- MOBILE MEDIA QUERY --- */
+        @media (max-width: 768px) {
+            * {
+                cursor: auto !important;
+            }
+
+            .cursor {
+                display: none;
+            }
+
+            :root {
+                --border-width: 0;
+            }
+
+            /* Nav adjustments */
+            nav {
+                position: absolute;
+                width: 100%;
+                top: 0;
+                left: 0;
+                padding: 20px;
+                background: transparent;
+                border: none;
+                mix-blend-mode: normal;
+                justify-content: flex-end;
+                /* Push hamburger right */
+            }
+
+            .logo-img {
+                display: none;
+            }
+
+            /* Hide Logo */
+            .nav-links {
+                display: none;
+            }
+
+            /* Hide Desktop Links */
+
+            /* Show Hamburger */
+            .hamburger {
+                display: flex;
+            }
+
+            .hamburger span {
+                background-color: var(--black);
+            }
+
+            .hamburger.active span {
+                background-color: var(--white);
+            }
+
+            /* Layout */
+            .work-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .page-header h1 {
+                font-size: 13vw;
+            }
+
+            .project-overlay {
+                opacity: 1 !important;
+                /* Forces text to show */
+                background: rgba(0, 0, 0, 0.3);
+                /* Optional: Makes the dark tint slightly lighter so image pops */
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="cursor"></div>
+
+    <nav>
+        <a href="index.html">
+            <img src="Images/Logo2.png" alt="Frame Social" class="logo-img">
+        </a>
+        <div class="nav-links">
+            <a href="index.html">Studio</a>
+            <a href="work.html" class="active">Work</a>
+            <a href="services.html">Services</a>
+            <a href="contact.html">Contact</a>
+        </div>
+        <div class="hamburger" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <div class="mobile-menu">
+        <a href="index.html" class="mobile-link">Studio</a>
+        <a href="work.html" class="mobile-link">Work</a>
+        <a href="services.html" class="mobile-link">Services</a>
+        <a href="contact.html" class="mobile-link">Contact</a>
+    </div>
+
+    <header class="page-header">
+        <h1>Works</h1>
+        <p>A collection of brands we've framed, elevated, and launched.</p>
+    </header>
+
+    <section class="work-grid">
+
+        <a href="../burnt-cones/index.html" class="project-card">
+            <img src="Images/burntcones.jpeg" class="project-img" alt="Burnt Cones">
+            <div class="project-overlay">
+                <h2 class="project-title">Burnt Cones</h2>
+                <span class="project-cat">Website / Gelato</span>
+            </div>
+        </a>
+
+        <a href="../burnt-cones/index.html" class="project-card">
+            <img src="Images/12.jpg" class="project-img" alt="Project 2">
+            <div class="project-overlay">
+                <h2 class="project-title">Burnt Cones</h2>
+                <span class="project-cat">Brand Identity</span>
+            </div>
+        </a>
+
+        <a href="https://www.instagram.com/thecreamycones/" class="project-card">
+            <img src="Images/13.jpg" class="project-img" alt="Project 3">
+            <div class="project-overlay">
+                <h2 class="project-title">Burnt Cones</h2>
+                <span class="project-cat">Content Production</span>
+            </div>
+        </a>
+
+        <a href="https://www.instagram.com/thecreamycones/" class="project-card">
+            <img src="Images/gelato.jpg" class="project-img" alt="Project 4">
+            <div class="project-overlay">
+                <h2 class="project-title">Burnt Cones</h2>
+                <span class="project-cat">Campaign Launch</span>
+            </div>
+        </a>
+
+    </section>
+
+    <footer>
+        <div class="footer-socials">
+            <a href="#">Instagram</a>
+            <a href="#">LinkedIn</a>
+        </div>
+        <p class="footer-bottom-text">© 2026 Frame Social. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const cursor = document.querySelector('.cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        const hoverTargets = document.querySelectorAll('a, .project-card');
+        hoverTargets.forEach(target => {
+            target.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+            target.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+        });
+
+        function toggleMenu() {
+            document.querySelector('.mobile-menu').classList.toggle('active');
+            document.querySelector('.hamburger').classList.toggle('active');
+        }
+    </script>
+
+</body>
+
+</html>

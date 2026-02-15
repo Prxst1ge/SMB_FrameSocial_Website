@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frame Social | Digital Branding Studio</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        @font-face {
+            font-family: 'Coterie';
+            src: url('CoterieRegular.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        /* --- BRAND VARIABLES --- */
+        :root {
+            --black: #0d0d0d;
+            --white: #ffffff;
+            --border-width: 15px;
+        }
+
+        /* --- RESET --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none;
+        }
+
+        body {
+            background-color: var(--white);
+            color: var(--black);
+            font-family: 'Raleway', sans-serif;
+            border: var(--border-width) solid var(--black);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- CUSTOM CURSOR --- */
+        .cursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 20px;
+            height: 20px;
+            background: var(--black);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s, background 0.3s;
+            mix-blend-mode: difference;
+        }
+
+        .cursor.hovered {
+            width: 50px;
+            height: 50px;
+            background: var(--white);
+            border: 1px solid var(--black);
+        }
+
+        /* --- PRELOADER --- */
+        .preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--black);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--white);
+            font-family: 'Coterie', sans-serif;
+            font-size: 2rem;
+            animation: slideUpCurtain 1.5s ease-in-out 1s forwards;
+        }
+
+        @keyframes slideUpCurtain {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-100%); }
+        }
+
+        /* --- TYPOGRAPHY UPDATE --- */
+        h1, h2, h3, .serif, .logo, .marquee-content span, .manifesto-text, .footer-cta, .purpose-statement, .promise-highlight {
+            font-family: 'Coterie', sans-serif;
+        }
+
+        a { text-decoration: none; color: inherit; }
+
+        /* --- NAVIGATION --- */
+        nav {
+            position: fixed;
+            top: var(--border-width);
+            left: var(--border-width);
+            right: var(--border-width);
+            padding: 30px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0);
+            z-index: 100;
+            mix-blend-mode: difference;
+            color: white;
+        }
+
+        .logo-img {
+            height: 120px;
+            width: auto;
+            display: block;
+            filter: invert(1);
+        }
+
+        .nav-links { display: flex; gap: 40px; }
+
+        .nav-links a {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            height: 90vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 10%;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-size: 9vw;
+            line-height: 0.9;
+            text-transform: uppercase;
+            mix-blend-mode: darken;
+        }
+
+        .hero-line { display: block; overflow: hidden; }
+
+        .hero-line span {
+            display: block;
+            transform: translateY(100%);
+            animation: textReveal 1s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+        }
+
+        .hero-line:nth-child(1) span { animation-delay: 1.6s; }
+        .hero-line:nth-child(2) span { animation-delay: 1.8s; font-style: italic; }
+        .hero-line:nth-child(3) span { animation-delay: 2.0s; margin-left: 10vw; }
+
+        .hero-sub {
+            margin-top: 40px;
+            max-width: 450px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            opacity: 0;
+            animation: fadeIn 1s ease forwards 2.5s;
+            border-left: 3px solid var(--black);
+            padding-left: 20px;
+        }
+
+        /* --- MARQUEE STRIP --- */
+        .marquee-section {
+            padding: 50px 0;
+            border-top: 1px solid var(--black);
+            border-bottom: 1px solid var(--black);
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .marquee-content {
+            display: inline-block;
+            animation: scroll 15s linear infinite;
+        }
+
+        .marquee-content span {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 4rem;
+            text-transform: uppercase;
+            margin-right: 60px;
+            color: transparent;
+            -webkit-text-stroke: 1px var(--black);
+        }
+
+        .marquee-content span:hover {
+            color: var(--black);
+            font-style: italic;
+        }
+
+        /* --- BRAND CORE --- */
+        .brand-core {
+            padding: 150px 10%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: flex-start;
+            border-bottom: 1px solid #eee;
+        }
+
+        .core-label {
+            font-family: 'Raleway', sans-serif;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            display: block;
+            border-bottom: 1px solid var(--black);
+            padding-bottom: 10px;
+            width: fit-content;
+        }
+
+        .purpose-statement {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.5rem;
+            line-height: 1.1;
+            margin-bottom: 40px;
+        }
+
+        .promise-text {
+            font-family: 'Raleway', sans-serif;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #444;
+        }
+
+        .promise-highlight {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3.5rem;
+            line-height: 1;
+            margin-top: 20px;
+            display: block;
+            color: var(--black);
+            font-style: italic;
+        }
+
+        /* --- MANIFESTO --- */
+        .manifesto {
+            background: var(--black);
+            color: var(--white);
+            padding: 150px 10%;
+            position: relative;
+        }
+
+        .manifesto-text {
+            font-size: 3.5rem;
+            line-height: 1.2;
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        .manifesto-text span { opacity: 0.2; transition: 0.3s; }
+        .manifesto-text span.active { opacity: 1; }
+
+        /* --- FOOTER --- */
+        footer {
+            height: 80vh;
+            background: var(--white);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .footer-cta {
+            font-size: 6vw;
+            font-family: 'Cormorant Garamond', serif;
+            line-height: 1;
+            margin-bottom: 30px;
+        }
+
+        .email-btn {
+            padding: 20px 40px;
+            background: var(--black);
+            color: var(--white);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 1rem;
+            border-radius: 50px;
+            transition: 0.3s;
+        }
+
+        .email-btn:hover {
+            transform: scale(1.1);
+            background: #c49a6c;
+            border: none;
+        }
+
+        /* --- ANIMATIONS --- */
+        @keyframes textReveal { to { transform: translateY(0); } }
+        @keyframes fadeIn { to { opacity: 1; } }
+        @keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+        /* HAMBURGER STYLES */
+        .hamburger {
+            display: none;
+            cursor: none;
+            flex-direction: column;
+            gap: 6px;
+            width: 30px;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 100%;
+            height: 2px;
+            background-color: white;
+            transition: 0.3s;
+        }
+
+        /* MOBILE MENU STYLES */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: var(--black);
+            color: var(--white);
+            z-index: 90;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            transform: translateY(-100%);
+            transition: 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        .mobile-menu.active { transform: translateY(0); }
+
+        /* --- CHANGED FONT HERE TO CORMORANT GARAMOND --- */
+        .mobile-link {
+            font-family: 'Cormorant Garamond', serif; 
+            font-size: 3rem;
+            text-transform: uppercase;
+        }
+
+        /* Hamburger Animation States */
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+            background-color: white;
+        }
+
+        .hamburger.active span:nth-child(2) {
+            transform: rotate(-45deg) translate(1px, -1px);
+            background-color: white;
+        }
+
+        /* --- MOBILE --- */
+        @media (max-width: 768px) {
+            * { cursor: auto !important; }
+            .cursor { display: none; }
+            :root { --border-width: 0; }
+
+            nav {
+                position: relative;
+                mix-blend-mode: normal;
+                background: white;
+                color: black;
+                border-bottom: 1px solid #eee;
+            }
+
+            .logo-img { filter: none; height: 40px; display: none; }
+            .nav-links { display: none; }
+
+            /* SHOW HAMBURGER */
+            .hamburger { display: flex; z-index: 101; }
+            .hamburger span { background-color: var(--black); }
+            .hamburger.active span { background-color: var(--white); }
+
+            .hero h1 { font-size: 14vw; }
+            .hero-line:nth-child(3) span { margin-left: 0; }
+            .brand-core { grid-template-columns: 1fr; gap: 40px; padding: 80px 20px; }
+            .manifesto-text { font-size: 2rem; }
+            .footer-cta { font-size: 3rem; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="cursor"></div>
+
+    <div class="preloader">
+        <div>FRAME SOCIAL</div>
+    </div>
+
+    <nav>
+        <a href="index.html">
+            <img src="Images/Logo2.png" alt="Frame Social" class="logo-img">
+        </a>
+        <div class="nav-links">
+            <a href="index.html">Studio</a>
+            <a href="work.html">Work</a>
+            <a href="services.html">Services</a>
+            <a href="contact.html">Contact</a>
+        </div>
+        <div class="hamburger" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <div class="mobile-menu">
+        <a href="index.html" class="mobile-link">Studio</a>
+        <a href="work.html" class="mobile-link">Work</a>
+        <a href="services.html" class="mobile-link">Services</a>
+        <a href="contact.html" class="mobile-link">Contact</a>
+    </div>
+
+    <section class="hero">
+        <h1>
+            <div class="hero-line"><span>SOCIAL,</span></div>
+            <div class="hero-line"><span>FRAMED</span></div>
+            <div class="hero-line"><span>WITH PURPOSE.</span></div>
+        </h1>
+        <p class="hero-sub">
+            Helping lifestyle & F&B brands build awareness, engagement, and trust through strategic content.
+        </p>
+    </section>
+
+    <section class="marquee-section">
+        <div class="marquee-content">
+            <span>Strategy • Branding • Content • Social • Production • Strategy • Branding • Content • Social • Production •</span>
+        </div>
+    </section>
+
+    <section class="brand-core">
+        <div>
+            <span class="core-label">Our Purpose</span>
+            <p class="purpose-statement">
+                We help brands communicate clearly and consistently in a crowded social media landscape.
+            </p>
+        </div>
+        <div>
+            <span class="core-label">Our Promise</span>
+            <p class="promise-text">
+                We deliver strategic, thoughtful, and audience-driven social media solutions that prioritise clarity and
+                long-term brand trust over short-term trends.
+                <span class="promise-highlight">
+                    "We frame how brands are seen, understood, and remembered."
+                </span>
+            </p>
+        </div>
+    </section>
+
+    <section class="manifesto">
+        <p class="manifesto-text" id="manifesto-text">
+            <span>The</span> <span>digital</span> <span>space</span> <span>is</span> <span>loud.</span>
+            <span>We</span> <span>make</span> <span>it</span> <span>clear.</span>
+            <span>We</span> <span>don't</span> <span>just</span> <span>post;</span>
+            <span>we</span> <span>frame</span> <span>the</span> <span>narrative.</span>
+        </p>
+    </section>
+
+    <footer>
+        <h2 class="footer-cta">Ready to be Seen?</h2>
+        <a href="contact.html" class="email-btn">Start a Project</a>
+
+        <div style="margin-top: 100px; display: flex; flex-direction: column; gap: 20px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; opacity: 0.6;">
+            <div style="display: flex; gap: 20px; justify-content: center;">
+                <a href="#">Instagram</a>
+                <a href="#">LinkedIn</a>
+            </div>
+            <p>© 2026 Frame Social. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // 1. CUSTOM CURSOR
+        const cursor = document.querySelector('.cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        // Hover Effect
+        const links = document.querySelectorAll('a, .brand-core');
+        links.forEach(link => {
+            link.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+            link.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+        });
+
+        // 2. SCROLL REVEAL
+        const spans = document.querySelectorAll('#manifesto-text span');
+        window.addEventListener('scroll', () => {
+            const triggerBottom = window.innerHeight / 1.3;
+            spans.forEach(span => {
+                const boxTop = span.getBoundingClientRect().top;
+                if (boxTop < triggerBottom) {
+                    span.classList.add('active');
+                } else {
+                    span.classList.remove('active');
+                }
+            });
+        });
+
+        // 3. MOBILE MENU TOGGLE
+        function toggleMenu() {
+            document.querySelector('.mobile-menu').classList.toggle('active');
+            document.querySelector('.hamburger').classList.toggle('active');
+        }
+    </script>
+
+</body>
+</html>
